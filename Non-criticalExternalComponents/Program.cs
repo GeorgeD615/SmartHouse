@@ -9,6 +9,7 @@ class Program
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.WriteLine("Некритичные внешние компоненты");
         Console.ForegroundColor = ConsoleColor.White;
+        //Thread.Sleep(40000);
 
         var factory = new ConnectionFactory() { HostName = "localhost" };
         using (var connection = factory.CreateConnection())

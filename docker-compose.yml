@@ -1,0 +1,69 @@
+version: '3.7'
+
+services:
+  rabbitmq:
+    image: "rabbitmq:latest"
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" # AMQP порт
+      - "15672:15672" # Web-интерфейс RabbitMQ
+    environment:
+      RABBITMQ_DEFAULT_USER: "user"
+      RABBITMQ_DEFAULT_PASS: "password"
+    networks:
+      - smart-house-network
+  
+  inputcommandhandler:
+    build: 
+      context: ./InputCommandHandler
+      dockerfile: Dockerfile
+    command: sh -c "sleep 30 && dotnet InputCommandHandler.dll"
+    #command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "dotnet", "InputCommandHandler.dll"]
+    depends_on:
+      - rabbitmq
+    networks:
+      - smart-house-network
+    links: 
+      - rabbitmq
+
+  non-criticaldataanalysissystem:
+    build: 
+      context: ./Non-criticalDataAnalysisSystem
+      dockerfile: Dockerfile
+    command: sh -c "sleep 30 && dotnet Non-criticalDataAnalysisSystem.dll"
+    #command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "dotnet", "Non-criticalDataAnalysisSystem.dll"]
+    depends_on:
+      - rabbitmq
+    networks:
+      - smart-house-network
+    links: 
+      - rabbitmq
+
+  non-criticalexternalcomponentmanagementsystem:
+    build: 
+      context: ./Non-criticalExternalComponentManagementSystem
+      dockerfile: Dockerfile
+    command: sh -c "sleep 30 && dotnet Non-criticalExternalComponentManagementSystem.dll"
+    #command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "dotnet", "Non-criticalExternalComponentManagementSystem.dll"]
+    depends_on:
+      - rabbitmq
+    networks:
+      - smart-house-network
+    links: 
+      - rabbitmq
+
+  non-criticalexternalcomponents:
+    build: 
+      context: ./Non-criticalExternalComponents
+      dockerfile: Dockerfile
+    command: sh -c "sleep 30 && dotnet Non-criticalExternalComponents.dll"
+    #command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "dotnet", "Non-criticalExternalComponents.dll"]
+    depends_on:
+      - rabbitmq
+    networks:
+      - smart-house-network
+    links: 
+      - rabbitmq
+
+networks:
+  smart-house-network:

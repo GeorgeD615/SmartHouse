@@ -8,6 +8,7 @@ class Program
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.WriteLine("Система анализа некритичных данных");
         Console.ForegroundColor = ConsoleColor.White;
+        //Thread.Sleep(40000);
 
         var factory = new ConnectionFactory() { HostName = "localhost" };
         using (var connection = factory.CreateConnection())

@@ -8,6 +8,11 @@ class Program
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.WriteLine("Система анализа некритичных данных");
         Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine("Формат входных некритичных данных:");
+        Console.WriteLine("{показатель} : {значение_показателя}");
+        Console.WriteLine("Показатели:");
+        Console.WriteLine(" - Время");
+        Console.WriteLine(" - Пыль");
 
         var factory = new ConnectionFactory() { HostName = "localhost" };
         using (var connection = factory.CreateConnection())

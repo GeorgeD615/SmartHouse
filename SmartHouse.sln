@@ -3,27 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InputCommandHandler", "InputCommandHandler\InputCommandHandler.csproj", "{20359BD1-BA25-4700-B536-1E222FDFA482}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InputCommandHandler", "InputCommandHandler\InputCommandHandler.csproj", "{20359BD1-BA25-4700-B536-1E222FDFA482}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationSystem", "AuthorizationSystem\AuthorizationSystem.csproj", "{A181DFB7-82EA-4378-ABF7-4EA0573B9674}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationSystem", "AuthorizationSystem\AuthorizationSystem.csproj", "{A181DFB7-82EA-4378-ABF7-4EA0573B9674}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Non-criticalExternalComponentManagementSystem", "Non-criticalExternalComponentManagementSystem\Non-criticalExternalComponentManagementSystem.csproj", "{043EB834-C8A6-46FF-A63D-B252770F6FA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Non-criticalExternalComponentManagementSystem", "Non-criticalExternalComponentManagementSystem\Non-criticalExternalComponentManagementSystem.csproj", "{043EB834-C8A6-46FF-A63D-B252770F6FA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemForReadingAndWritingUserScripts", "SystemForReadingAndWritingUserScripts\SystemForReadingAndWritingUserScripts.csproj", "{4BB8EC52-A3F4-4849-BA90-6571F311BF50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemForReadingAndWritingUserScripts", "SystemForReadingAndWritingUserScripts\SystemForReadingAndWritingUserScripts.csproj", "{4BB8EC52-A3F4-4849-BA90-6571F311BF50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomScriptLibrary", "CustomScriptLibrary\CustomScriptLibrary.csproj", "{5228DA01-293E-483D-8C49-36DBF8E16F4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomScriptLibrary", "CustomScriptLibrary\CustomScriptLibrary.csproj", "{5228DA01-293E-483D-8C49-36DBF8E16F4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CriticalExternalComponentManagementSystem", "CriticalExternalComponentManagementSystem\CriticalExternalComponentManagementSystem.csproj", "{4D0DD5BD-B843-45D9-BD83-7596ED52BF51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CriticalExternalComponentManagementSystem", "CriticalExternalComponentManagementSystem\CriticalExternalComponentManagementSystem.csproj", "{4D0DD5BD-B843-45D9-BD83-7596ED52BF51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CriticalExternalComponents", "CriticalExternalComponents\CriticalExternalComponents.csproj", "{2E6A26F6-71C0-4CBE-A52B-13A8775600A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CriticalExternalComponents", "CriticalExternalComponents\CriticalExternalComponents.csproj", "{2E6A26F6-71C0-4CBE-A52B-13A8775600A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CriticalDataAnalysisSystem", "CriticalDataAnalysisSystem\CriticalDataAnalysisSystem.csproj", "{168F9B49-7558-4629-87CC-6A743BE62833}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CriticalDataAnalysisSystem", "CriticalDataAnalysisSystem\CriticalDataAnalysisSystem.csproj", "{168F9B49-7558-4629-87CC-6A743BE62833}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Non-criticalDataAnalysisSystem", "Non-criticalDataAnalysisSystem\Non-criticalDataAnalysisSystem.csproj", "{81BAA847-83D7-47C2-AE45-6FC3D30BDDD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Non-criticalDataAnalysisSystem", "Non-criticalDataAnalysisSystem\Non-criticalDataAnalysisSystem.csproj", "{81BAA847-83D7-47C2-AE45-6FC3D30BDDD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Non-criticalExternalComponents", "Non-criticalExternalComponents\Non-criticalExternalComponents.csproj", "{611D33AE-3C53-4791-BC4A-817691DA2A41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Non-criticalExternalComponents", "Non-criticalExternalComponents\Non-criticalExternalComponents.csproj", "{611D33AE-3C53-4791-BC4A-817691DA2A41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CriticalInputCommandProcessingSystem", "CriticalInputCommandProcessingSystem\CriticalInputCommandProcessingSystem.csproj", "{212A9E6B-BDCD-452F-A90F-177E368101BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CriticalInputCommandProcessingSystem", "CriticalInputCommandProcessingSystem\CriticalInputCommandProcessingSystem.csproj", "{212A9E6B-BDCD-452F-A90F-177E368101BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityMonitor", "SecurityMonitor\SecurityMonitor.csproj", "{6FAE3053-FD5E-4AE7-BA70-80F773096C45}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{212A9E6B-BDCD-452F-A90F-177E368101BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{212A9E6B-BDCD-452F-A90F-177E368101BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{212A9E6B-BDCD-452F-A90F-177E368101BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FAE3053-FD5E-4AE7-BA70-80F773096C45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FAE3053-FD5E-4AE7-BA70-80F773096C45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FAE3053-FD5E-4AE7-BA70-80F773096C45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FAE3053-FD5E-4AE7-BA70-80F773096C45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,33 +10,28 @@ class Program
         Console.ForegroundColor = ConsoleColor.White;
         Console.WriteLine("Команда должна посылаться в формате {название_внешнего_компонента} : {описание_команды}");
         Console.WriteLine("Описание команд для разных компонентов:");
+        Console.WriteLine("Неритичные компоненты");
         Console.WriteLine(" - Пылесос");
         Console.WriteLine("     сухая уборка - {название_комнаты}");
         Console.WriteLine("     влажная уборка - {название_комнаты}");
         Console.WriteLine(" - Жалюзи");
         Console.WriteLine("     поднять");
         Console.WriteLine("     опустить");
+        Console.WriteLine("Критичные компоненты(в конце необходимо указать ключ)");
         Console.WriteLine(" - Климат-контроль");
         Console.WriteLine("     температура +{градусы по цельсию}");
         Console.WriteLine("     температура -{градусы по цельсию}");
         Console.WriteLine(" - Свет");
         Console.WriteLine("     включить");
         Console.WriteLine("     выкючить");
-        //Thread.Sleep(40000);
 
 
+        //var factory = new ConnectionFactory() { HostName = "rabbitmq" };
         var factory = new ConnectionFactory() { HostName = "localhost" };
         using (var connection = factory.CreateConnection())
         using (var channel = connection.CreateModel())
         {
-
-            channel.QueueDeclare(queue: "for_non_critical_command",
-                                    durable: false,
-                                    exclusive: false,
-                                    autoDelete: false,
-                                    arguments: null);
-
-            channel.QueueDeclare(queue: "for_critical_command",
+            channel.QueueDeclare(queue: "security_monitor",
                                     durable: false,
                                     exclusive: false,
                                     autoDelete: false,
@@ -52,35 +47,34 @@ class Program
 
                 var input = command.Split();
 
-                var body = Encoding.UTF8.GetBytes(command);
+                var body = Encoding.UTF8.GetBytes("input_command_handler " + command);
 
                 switch (input[0])
                 {
                     case "пылесос":
-                        if (input.Length != 6 || 
+                        if (input.Length != 6 || input[1] != ":" ||
                             (input[2] != "сухая" && input[2] != "влажная") ||
-                            input[3] != "уборка" || input[4] != "-" )
+                            input[3] != "уборка" || input[4] != "-")
                         {
                             Console.WriteLine("Некорректный формат входной команды");
                             break;
                         }
                         channel.BasicPublish(exchange: "",
-                                             routingKey: "for_non_critical_command",
+                                             routingKey: "security_monitor",
                                              basicProperties: null,
                                              body: body);
 
                         Console.WriteLine($"Команда отправлена");
                         break;
 
-
                     case "жалюзи":
-                        if (input.Length != 3 || input[2] != "поднять" && input[2] != "опустить")
+                        if (input.Length != 3 || input[1] != ":" || input[2] != "поднять" && input[2] != "опустить")
                         {
                             Console.WriteLine("Некорректный формат входной команды");
                             break;
                         }
                         channel.BasicPublish(exchange: "",
-                                             routingKey: "for_non_critical_command",
+                                             routingKey: "security_monitor",
                                              basicProperties: null,
                                              body: body);
 
@@ -88,7 +82,7 @@ class Program
                         break;
 
                     case "климат-контроль":
-                        if (input.Length != 4 || input[2] != "температура" || 
+                        if (input.Length != 5 || input[1] != ":" || input[2] != "температура" ||
                             (!input[3].StartsWith('+') && !input[3].StartsWith("-")) ||
                             input[3].Skip(1).All(char.IsDigit))
                         {
@@ -96,21 +90,21 @@ class Program
                             break;
                         }
                         channel.BasicPublish(exchange: "",
-                                             routingKey: "for_critical_command",
+                                             routingKey: "security_monitor",
                                              basicProperties: null,
                                              body: body);
 
                         Console.WriteLine($"Команда отправлена");
                         break;
                     case "свет":
-                        if (input.Length != 3 || (input[2] != "включить" && input[2] != "выключить"))
+                        if (input.Length != 4 || input[1] != ":" || (input[2] != "включить" && input[2] != "выключить"))
                         {
                             Console.WriteLine("Некорректный формат входной команды");
                             break;
                         }
 
                         channel.BasicPublish(exchange: "",
-                                             routingKey: "for_critical_command",
+                                             routingKey: "security_monitor",
                                              basicProperties: null,
                                              body: body);
 

@@ -8,12 +8,13 @@ services:
       - "5672:5672" # AMQP порт
       - "15672:15672" # Web-интерфейс RabbitMQ
     environment:
-      RABBITMQ_DEFAULT_USER: "user"
-      RABBITMQ_DEFAULT_PASS: "password"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
     networks:
       - smart-house-network
   
   inputcommandhandler:
+    container_name: inputcommandhandler
     build: 
       context: ./InputCommandHandler
       dockerfile: Dockerfile
@@ -27,6 +28,7 @@ services:
       - rabbitmq
 
   non-criticaldataanalysissystem:
+    container_name: non-criticaldataanalysissystem
     build: 
       context: ./Non-criticalDataAnalysisSystem
       dockerfile: Dockerfile
@@ -40,6 +42,7 @@ services:
       - rabbitmq
 
   non-criticalexternalcomponentmanagementsystem:
+    container_name: non-criticalexternalcomponentmanagementsystem
     build: 
       context: ./Non-criticalExternalComponentManagementSystem
       dockerfile: Dockerfile
@@ -53,11 +56,26 @@ services:
       - rabbitmq
 
   non-criticalexternalcomponents:
+    container_name: non-criticalexternalcomponents
     build: 
       context: ./Non-criticalExternalComponents
       dockerfile: Dockerfile
     command: sh -c "sleep 30 && dotnet Non-criticalExternalComponents.dll"
     #command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "dotnet", "Non-criticalExternalComponents.dll"]
+    depends_on:
+      - rabbitmq
+    networks:
+      - smart-house-network
+    links: 
+      - rabbitmq
+
+  securitymonitor:
+    container_name: securitymonitor
+    build: 
+      context: ./SecurityMonitor
+      dockerfile: Dockerfile
+    command: sh -c "sleep 30 && dotnet SecurityMonitor.dll"
+    #command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "dotnet", "SecurityMonitor.dll"]
     depends_on:
       - rabbitmq
     networks:

@@ -9,14 +9,13 @@ class Program
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.WriteLine("Некритичные внешние компоненты");
         Console.ForegroundColor = ConsoleColor.White;
-        //Thread.Sleep(40000);
 
+        //var factory = new ConnectionFactory() { HostName = "rabbitmq" };
         var factory = new ConnectionFactory() { HostName = "localhost" };
         using (var connection = factory.CreateConnection())
         using (var channel = connection.CreateModel())
         {
-            //Input command channel
-            channel.QueueDeclare(queue: "for_non_critical_command_from_manager",
+            channel.QueueDeclare(queue: "non_critical_external_components",
                                     durable: false,
                                     exclusive: false,
                                     autoDelete: false,
@@ -27,13 +26,11 @@ class Program
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                Console.WriteLine($"Получил команду: {message}");
-
-                //TODO : process the command and execute a command
-
-                Console.WriteLine($"Выполнил команду: {message}");
+                var input = message.Split().ToArray();
+                Console.WriteLine($"Получил команду от {input[0]}");
+                Console.WriteLine($"Выполнил команду: {string.Join(" ", input.Skip(1))}");
             };
-            channel.BasicConsume(queue: "for_non_critical_command_from_manager",
+            channel.BasicConsume(queue: "non_critical_external_components",
                                     autoAck: true,
                                     consumer: commands_consumer);
 

@@ -4,13 +4,20 @@ using System.Text;
 
 class Program
 {
+    public class Script
+    {
+        public string Name { get; set; }
+        public List<string> Commands { get; set; } = new();
+    }
+
     static void Main(string[] args)
     {
         Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.WriteLine("Система авторизации");
+        Console.WriteLine("Библиотека пользовательских сценариев");
         Console.ForegroundColor = ConsoleColor.White;
-        var password = "qwerty";
-        Console.WriteLine($"Password : {password}");
+
+        var scripts = new List<Script>();
+
 
         //var factory = new ConnectionFactory() { HostName = "rabbitmq" };
         var factory = new ConnectionFactory() { HostName = "localhost" };
@@ -23,7 +30,7 @@ class Program
                                     autoDelete: false,
                                     arguments: null);
 
-            channel.QueueDeclare(queue: "authorization_system",
+            channel.QueueDeclare(queue: "сustom_script_library",
                                     durable: false,
                                     exclusive: false,
                                     autoDelete: false,
@@ -36,48 +43,51 @@ class Program
                 var message = Encoding.UTF8.GetString(receiving_command);
                 var input = message.Split().ToArray();
                 Console.WriteLine($"Получил сообщение от {input[0]}");
-                var body = Encoding.UTF8.GetBytes("authorization_system " + string.Join(" ", input.Skip(1)));
                 switch (input[0])
                 {
-                    case "input_command_handler":
+                    case "system_for_reading_and_writing_user_scripts":
                         switch (input[1])
                         {
                             case "script":
-                                if (input[4] == password)
+                                var newScript = new Script();
+                                newScript.Name = input[2];
+                                var commands = input.Skip(6);
+                                string newCommand = string.Empty;
+                                foreach (var c in commands)
                                 {
-                                    channel.BasicPublish(exchange: "",
-                                                                 routingKey: "security_monitor",
-                                                                 basicProperties: null,
-                                                                 body: body);
-                                    Console.WriteLine("Сценарий отправлен");
+                                    if (c == "command")
+                                    {
+                                        newScript.Commands.Add(newCommand.Trim());
+                                        newCommand = string.Empty;
+                                    }
+                                    else
+                                        newCommand += $"{c} ";
                                 }
-                                else
-                                    Console.WriteLine("Неверный пароль");
+                                newScript.Commands.Add(newCommand);
+                                newCommand = string.Empty;
+                                scripts.Add(newScript);
+                                Console.WriteLine($"Сценарий {newScript.Name} сохранён");
                                 break;
                             case "start":
-                                if (input[3] == password)
+                                var script = scripts.FirstOrDefault(s => s.Name == input[2]);
+
+                                if(script == null)
                                 {
-                                    channel.BasicPublish(exchange: "",
-                                                                 routingKey: "security_monitor",
-                                                                 basicProperties: null,
-                                                                 body: body);
-                                    Console.WriteLine("Команда отправлен");
+                                    Console.WriteLine($"Сценарий {input[2]} не найден.");
+                                    break;
                                 }
-                                else
-                                    Console.WriteLine("Неверный пароль");
-                                break;
-                            default:
-                                if (input.Last() == password)
+
+                                foreach (var c in script.Commands)
                                 {
+                                    var body = Encoding.UTF8.GetBytes("сustom_script_library " + c);
                                     channel.BasicPublish(exchange: "",
-                                                                 routingKey: "security_monitor",
-                                                                 basicProperties: null,
-                                                                 body: body);
-                                    Console.WriteLine("Команда отправлена");
+                                                         routingKey: "security_monitor",
+                                                         basicProperties: null,
+                                                         body: body);
                                 }
-                                else
-                                    Console.WriteLine("Неверный пароль");
+                                Console.WriteLine("Сценарий найден. Команды отправлены.");
                                 break;
+                                   
                         }
                         break;
                     default:
@@ -86,7 +96,7 @@ class Program
                 }
 
             };
-            channel.BasicConsume(queue: "authorization_system",
+            channel.BasicConsume(queue: "сustom_script_library",
                                     autoAck: true,
                                     consumer: commands_consumer);
 

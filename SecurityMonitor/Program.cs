@@ -59,6 +59,19 @@ class Program
                                     autoDelete: false,
                                     arguments: null);
 
+            channel.QueueDeclare(queue: "system_for_reading_and_writing_user_scripts",
+                                    durable: false,
+                                    exclusive: false,
+                                    autoDelete: false,
+                                    arguments: null);
+
+            channel.QueueDeclare(queue: "сustom_script_library",
+                                    durable: false,
+                                    exclusive: false,
+                                    autoDelete: false,
+                                    arguments: null);
+
+
             var commands_consumer = new EventingBasicConsumer(channel);
             commands_consumer.Received += (model, ea) =>
             {
@@ -91,7 +104,22 @@ class Program
 
                                 Console.WriteLine($"Команда отправлена в authorization_system");
                                 break;
+                            case "script":
+                                channel.BasicPublish(exchange: "",
+                                                     routingKey: "authorization_system",
+                                                     basicProperties: null,
+                                                     body: body);
 
+                                Console.WriteLine($"Сценарий отправлен в authorization_system");
+                                break;
+                            case "start":
+                                channel.BasicPublish(exchange: "",
+                                                     routingKey: "authorization_system",
+                                                     basicProperties: null,
+                                                     body: body);
+
+                                Console.WriteLine($"Команда отправлена в authorization_system");
+                                break;
                             default:
                                 Console.WriteLine("Компонент не опознан");
                                 break;
@@ -119,16 +147,30 @@ class Program
                                                      routingKey: "critical_input_command_processing_system",
                                                      basicProperties: null,
                                                      body: body);
-                        Console.WriteLine($"Команда отправлена в critical_input_command_processing_system");
+                        if (input[1] != "script")
+                            Console.WriteLine($"Команда отправлена в critical_input_command_processing_system");
+                        else
+                            Console.WriteLine($"Сценарий отправлен в critical_input_command_processing_system");
                         break;
                     case "critical_input_command_processing_system":
-                        if (input[1] != "script")
+                        if (input[1] != "script" && input[1] != "start")
                         {
                             channel.BasicPublish(exchange: "",
                                                          routingKey: "critical_external_component_management_system",
                                                          basicProperties: null,
                                                          body: body);
                             Console.WriteLine($"Команда отправлена в critical_external_component_management_system");
+                        }
+                        else
+                        {
+                            channel.BasicPublish(exchange: "",
+                                                         routingKey: "system_for_reading_and_writing_user_scripts",
+                                                         basicProperties: null,
+                                                         body: body);
+                            if (input[1] == "script")
+                                Console.WriteLine($"Сценарий отправлен в system_for_reading_and_writing_user_scripts");
+                            else
+                                Console.WriteLine($"Команда отправлена в system_for_reading_and_writing_user_scripts");
                         }
                         break;
                     case "critical_external_component_management_system":
@@ -137,6 +179,43 @@ class Program
                                                          basicProperties: null,
                                                          body: body);
                         Console.WriteLine($"Команда отправлена в critical_external_components");
+                        break;
+                    case "critical_data_analysis_system":
+                        channel.BasicPublish(exchange: "",
+                                                     routingKey: "critical_input_command_processing_system",
+                                                     basicProperties: null,
+                                                     body: body);
+                        Console.WriteLine($"Информация отправлена в critical_input_command_processing_system");
+                        break;
+                    case "system_for_reading_and_writing_user_scripts":
+                        switch (input[1]) 
+                        {
+                            case "script":
+                            case "start":
+                                channel.BasicPublish(exchange: "",
+                                                     routingKey: "сustom_script_library",
+                                                     basicProperties: null,
+                                                     body: body);
+                                if (input[1] == "script")
+                                    Console.WriteLine("Сценарий отправлен в сustom_script_library");
+                                else
+                                    Console.WriteLine("Запрос на выполнение сценария отправен в сustom_script_library");
+                                break;
+                            default:
+                                channel.BasicPublish(exchange: "",
+                                                     routingKey: "critical_external_component_management_system",
+                                                     basicProperties: null,
+                                                     body: body);
+                                Console.WriteLine("Команда отправлена в critical_external_component_management_system");
+                                break;
+                        }
+                        break;
+                    case "сustom_script_library":
+                        channel.BasicPublish(exchange: "",
+                                                     routingKey: "system_for_reading_and_writing_user_scripts",
+                                                     basicProperties: null,
+                                                     body: body);
+                        Console.WriteLine($"Команда отправлена в system_for_reading_and_writing_user_scripts");
                         break;
                     default:
                         Console.WriteLine("Отправитель не опознан");

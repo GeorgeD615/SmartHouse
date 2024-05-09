@@ -38,6 +38,7 @@ class Program
                 switch (input[0])
                 {
                     case "critical_input_command_processing_system":
+                    case "system_for_reading_and_writing_user_scripts":
                         channel.BasicPublish(exchange: "",
                                                      routingKey: "security_monitor",
                                                      basicProperties: null,

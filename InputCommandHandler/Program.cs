@@ -17,13 +17,21 @@ class Program
         Console.WriteLine(" - Жалюзи");
         Console.WriteLine("     поднять");
         Console.WriteLine("     опустить");
-        Console.WriteLine("Критичные компоненты(в конце необходимо указать ключ)");
+        Console.WriteLine("Критичные компоненты(в конце необходимо указать пароль)");
         Console.WriteLine(" - Климат-контроль");
         Console.WriteLine("     температура +{градусы по цельсию}");
         Console.WriteLine("     температура -{градусы по цельсию}");
         Console.WriteLine(" - Свет");
         Console.WriteLine("     включить");
         Console.WriteLine("     выкючить");
+        Console.WriteLine();
+        Console.WriteLine("Для добавления сценария:");
+        Console.WriteLine("script {название_сценария} begin {пароль}");
+        Console.WriteLine("...");
+        Console.WriteLine("...");
+        Console.WriteLine("...");
+        Console.WriteLine("end");
+        Console.WriteLine("Запустить сценарий: start {название_сценария} {пароль}");
 
 
         //var factory = new ConnectionFactory() { HostName = "rabbitmq" };
@@ -66,7 +74,6 @@ class Program
 
                         Console.WriteLine($"Команда отправлена");
                         break;
-
                     case "жалюзи":
                         if (input.Length != 3 || input[1] != ":" || input[2] != "поднять" && input[2] != "опустить")
                         {
@@ -80,7 +87,6 @@ class Program
 
                         Console.WriteLine($"Команда отправлена");
                         break;
-
                     case "климат-контроль":
                         if (input.Length != 5 || input[1] != ":" || input[2] != "температура" ||
                             (!input[3].StartsWith('+') && !input[3].StartsWith("-")) ||
@@ -110,13 +116,89 @@ class Program
 
                         Console.WriteLine($"Команда отправлена");
                         break;
+                    case "script":
+                        if (input[2] != "begin" || input.Length != 4)
+                            Console.WriteLine("Некорректный формат входной команды");
+
+                        var script = command;
+                        while ((command = Console.ReadLine()) != "end")
+                        {
+                            if (string.IsNullOrEmpty(command))
+                                continue;
+
+                            command = command.Trim().ToLower();
+
+                            var inputScript = command.Split();
+
+                            switch (inputScript[0])
+                            {
+                                case "пылесос":
+                                    if (inputScript.Length != 6 || inputScript[1] != ":" ||
+                                        (inputScript[2] != "сухая" && inputScript[2] != "влажная") ||
+                                        inputScript[3] != "уборка" || inputScript[4] != "-")
+                                    {
+                                        Console.WriteLine("Некорректный формат входной команды");
+                                        break;
+                                    }
+
+                                    script += " command " + command;
+                                    break;
+                                case "жалюзи":
+                                    if (inputScript.Length != 3 || inputScript[1] != ":" || inputScript[2] != "поднять" && inputScript[2] != "опустить")
+                                    {
+                                        Console.WriteLine("Некорректный формат входной команды");
+                                        break;
+                                    }
+
+                                    script += " command " + command;
+                                    break;
+                                case "климат-контроль":
+                                    if (inputScript.Length != 4 || inputScript[1] != ":" || inputScript[2] != "температура" ||
+                                        (!inputScript[3].StartsWith('+') && !inputScript[3].StartsWith("-")) ||
+                                        !inputScript[3].Skip(1).All(char.IsDigit))
+                                    {
+                                        Console.WriteLine("Некорректный формат входной команды");
+                                        break;
+                                    }
+
+                                    script += " command " + command;
+                                    break;
+                                case "свет":
+                                    if (inputScript.Length != 3 || inputScript[1] != ":" || (inputScript[2] != "включить" && inputScript[2] != "выключить"))
+                                    {
+                                        Console.WriteLine("Некорректный формат входной команды");
+                                        break;
+                                    }
+
+                                    script += " command " + command;
+                                    break;
+                                default:
+                                    Console.WriteLine("Компонент не опознан");
+                                    break;
+                            }
+                        }
+                        body = Encoding.UTF8.GetBytes("input_command_handler " + script);
+                        channel.BasicPublish(exchange: "",
+                                             routingKey: "security_monitor",
+                                             basicProperties: null,
+                                             body: body);
+                        break;
+                    case "start":
+                        if(input.Length != 3)
+                        {
+                            Console.WriteLine("Некорректный формат входной команды");
+                            break;
+                        }
+                        channel.BasicPublish(exchange: "",
+                                             routingKey: "security_monitor",
+                                             basicProperties: null,
+                                             body: body);
+                        break;
 
                     default:
                         Console.WriteLine("Компонент не опознан");
                         break;
-
                 }
-
             }
         }
     }

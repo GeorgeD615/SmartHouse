@@ -42,7 +42,13 @@ class Program
                                                      routingKey: "security_monitor",
                                                      basicProperties: null,
                                                      body: body);
-                        Console.WriteLine("Команда отправлена");
+                        if (input[1] == "script")
+                            Console.WriteLine("Сценарий отправлен");
+                        else
+                            Console.WriteLine("Команда отправлена");
+                        break;
+                    case "critical_data_analysis_system":
+                        Console.WriteLine($"Получена информация: {string.Join(" ", input.Skip(1))}");
                         break;
                     default:
                         Console.WriteLine("Отправитель не опознан");

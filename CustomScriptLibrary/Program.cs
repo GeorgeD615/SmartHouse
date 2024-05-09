@@ -12,6 +12,7 @@ class Program
 
     static void Main(string[] args)
     {
+        Thread.Sleep(20000);
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.WriteLine("Библиотека пользовательских сценариев");
         Console.ForegroundColor = ConsoleColor.White;
@@ -19,8 +20,8 @@ class Program
         var scripts = new List<Script>();
 
 
-        //var factory = new ConnectionFactory() { HostName = "rabbitmq" };
-        var factory = new ConnectionFactory() { HostName = "localhost" };
+        //var factory = new ConnectionFactory() { HostName = "localhost" };
+        var factory = new ConnectionFactory() { HostName = "rabbitmq" };
         using (var connection = factory.CreateConnection())
         using (var channel = connection.CreateModel())
         {

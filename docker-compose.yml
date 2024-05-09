@@ -83,5 +83,103 @@ services:
     links: 
       - rabbitmq
 
+  authorizationsystem:
+    container_name: authorizationsystem
+    build: 
+      context: ./AuthorizationSystem
+      dockerfile: Dockerfile
+    command: sh -c "sleep 30 && dotnet AuthorizationSystem.dll"
+    #command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "dotnet", "SecurityMonitor.dll"]
+    depends_on:
+      - rabbitmq
+    networks:
+      - smart-house-network
+    links: 
+      - rabbitmq
+
+  criticaldataanalysissystem:
+    container_name: criticaldataanalysissystem
+    build: 
+      context: ./CriticalDataAnalysisSystem
+      dockerfile: Dockerfile
+    command: sh -c "sleep 30 && dotnet CriticalDataAnalysisSystem.dll"
+    #command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "dotnet", "SecurityMonitor.dll"]
+    depends_on:
+      - rabbitmq
+    networks:
+      - smart-house-network
+    links: 
+      - rabbitmq
+
+  criticalexternalcomponentmanagementsystem:
+    container_name: criticalexternalcomponentmanagementsystem
+    build: 
+      context: ./CriticalExternalComponentManagementSystem
+      dockerfile: Dockerfile
+    command: sh -c "sleep 30 && dotnet CriticalExternalComponentManagementSystem.dll"
+    #command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "dotnet", "SecurityMonitor.dll"]
+    depends_on:
+      - rabbitmq
+    networks:
+      - smart-house-network
+    links: 
+      - rabbitmq
+
+  criticalexternalcomponents:
+    container_name: criticalexternalcomponents
+    build: 
+      context: ./CriticalExternalComponents
+      dockerfile: Dockerfile
+    command: sh -c "sleep 30 && dotnet CriticalExternalComponents.dll"
+    #command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "dotnet", "SecurityMonitor.dll"]
+    depends_on:
+      - rabbitmq
+    networks:
+      - smart-house-network
+    links: 
+      - rabbitmq
+
+  criticalinputcommandprocessingsystem:
+    container_name: criticalinputcommandprocessingsystem
+    build: 
+      context: ./CriticalInputCommandProcessingSystem
+      dockerfile: Dockerfile
+    command: sh -c "sleep 30 && dotnet CriticalInputCommandProcessingSystem.dll"
+    #command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "dotnet", "SecurityMonitor.dll"]
+    depends_on:
+      - rabbitmq
+    networks:
+      - smart-house-network
+    links: 
+      - rabbitmq
+
+  customscriptlibrary:
+    container_name: customscriptlibrary
+    build: 
+      context: ./CustomScriptLibrary
+      dockerfile: Dockerfile
+    command: sh -c "sleep 30 && dotnet CustomScriptLibrary.dll"
+    #command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "dotnet", "SecurityMonitor.dll"]
+    depends_on:
+      - rabbitmq
+    networks:
+      - smart-house-network
+    links: 
+      - rabbitmq
+
+  systemforreadingandwritinguserscripts:
+    container_name: systemforreadingandwritinguserscripts
+    build: 
+      context: ./SystemForReadingAndWritingUserScripts
+      dockerfile: Dockerfile
+    command: sh -c "sleep 30 && dotnet SystemForReadingAndWritingUserScripts.dll"
+    #command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "dotnet", "SecurityMonitor.dll"]
+    depends_on:
+      - rabbitmq
+    networks:
+      - smart-house-network
+    links: 
+      - rabbitmq
+  
 networks:
   smart-house-network:

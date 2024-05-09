@@ -5,6 +5,7 @@ class Program
 {
     static void Main(string[] args)
     {
+        Thread.Sleep(20000);
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.WriteLine("Обработчик входящих команд");
         Console.ForegroundColor = ConsoleColor.White;
@@ -34,8 +35,8 @@ class Program
         Console.WriteLine("Запустить сценарий: start {название_сценария} {пароль}");
 
 
-        //var factory = new ConnectionFactory() { HostName = "rabbitmq" };
-        var factory = new ConnectionFactory() { HostName = "localhost" };
+        //var factory = new ConnectionFactory() { HostName = "localhost" };
+        var factory = new ConnectionFactory() { HostName = "rabbitmq" };
         using (var connection = factory.CreateConnection())
         using (var channel = connection.CreateModel())
         {

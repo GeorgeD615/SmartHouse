@@ -6,13 +6,13 @@ class Program
 {
     static void Main(string[] args)
     {
-        Thread.Sleep(20000);
+        //Thread.Sleep(20000);
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.WriteLine("Система обработки критичных входящих команд");
         Console.ForegroundColor = ConsoleColor.White;
 
-        //var factory = new ConnectionFactory() { HostName = "localhost" };
-        var factory = new ConnectionFactory() { HostName = "rabbitmq" };
+        var factory = new ConnectionFactory() { HostName = "localhost" };
+        //var factory = new ConnectionFactory() { HostName = "rabbitmq" };
         using (var connection = factory.CreateConnection())
         using (var channel = connection.CreateModel())
         {

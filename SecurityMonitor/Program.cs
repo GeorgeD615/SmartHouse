@@ -7,14 +7,14 @@ class Program
 {
     static void Main(string[] args)
     {
-        Thread.Sleep(20000);
+        //Thread.Sleep(20000);
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.WriteLine("Монитор безопасности");
         Console.ForegroundColor = ConsoleColor.White;
 
 
-        //var factory = new ConnectionFactory() { HostName = "localhost" };
-        var factory = new ConnectionFactory() { HostName = "rabbitmq" };
+        var factory = new ConnectionFactory() { HostName = "localhost" };
+        //var factory = new ConnectionFactory() { HostName = "rabbitmq" };
         using (var connection = factory.CreateConnection())
         using (var channel = connection.CreateModel())
         {
@@ -72,6 +72,12 @@ class Program
                                     autoDelete: false,
                                     arguments: null);
 
+            channel.QueueDeclare(queue: "test_out",
+                                    durable: false,
+                                    exclusive: false,
+                                    autoDelete: false,
+                                    arguments: null);
+
 
             var commands_consumer = new EventingBasicConsumer(channel);
             commands_consumer.Received += (model, ea) =>
@@ -79,7 +85,13 @@ class Program
                 var receiving_command = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(receiving_command);
                 var input = message.Split().ToArray();
+                byte[] bodyOut;
                 Console.WriteLine($"Получил сообщение от {input[0]}");
+                bodyOut = Encoding.UTF8.GetBytes($"Получил сообщение от {input[0]}");
+                channel.BasicPublish(exchange: "",
+                                     routingKey: "test_out",
+                                     basicProperties: null,
+                                     body: bodyOut);
                 var body = Encoding.UTF8.GetBytes(string.Join(" ", input));
                 switch (input[0])
                 {
@@ -94,6 +106,11 @@ class Program
                                                      body: body);
 
                                 Console.WriteLine($"Команда отправлена в non_critical_external_component_management_system");
+                                bodyOut = Encoding.UTF8.GetBytes($"Команда отправлена в non_critical_external_component_management_system");
+                                channel.BasicPublish(exchange: "",
+                                                     routingKey: "test_out",
+                                                     basicProperties: null,
+                                                     body: bodyOut);
                                 break;
 
                             case "климат-контроль":
@@ -104,6 +121,11 @@ class Program
                                                      body: body);
 
                                 Console.WriteLine($"Команда отправлена в authorization_system");
+                                bodyOut = Encoding.UTF8.GetBytes($"Команда отправлена в authorization_system");
+                                channel.BasicPublish(exchange: "",
+                                                     routingKey: "test_out",
+                                                     basicProperties: null,
+                                                     body: bodyOut);
                                 break;
                             case "script":
                                 channel.BasicPublish(exchange: "",
@@ -112,6 +134,11 @@ class Program
                                                      body: body);
 
                                 Console.WriteLine($"Сценарий отправлен в authorization_system");
+                                bodyOut = Encoding.UTF8.GetBytes($"Сценарий отправлен в authorization_system");
+                                channel.BasicPublish(exchange: "",
+                                                     routingKey: "test_out",
+                                                     basicProperties: null,
+                                                     body: bodyOut);
                                 break;
                             case "start":
                                 channel.BasicPublish(exchange: "",
@@ -120,9 +147,19 @@ class Program
                                                      body: body);
 
                                 Console.WriteLine($"Команда отправлена в authorization_system");
+                                bodyOut = Encoding.UTF8.GetBytes($"Команда отправлена в authorization_system");
+                                channel.BasicPublish(exchange: "",
+                                                     routingKey: "test_out",
+                                                     basicProperties: null,
+                                                     body: bodyOut);
                                 break;
                             default:
                                 Console.WriteLine("Компонент не опознан");
+                                bodyOut = Encoding.UTF8.GetBytes("Компонент не опознан");
+                                channel.BasicPublish(exchange: "",
+                                                     routingKey: "test_out",
+                                                     basicProperties: null,
+                                                     body: bodyOut);
                                 break;
                         }
                         break;
@@ -133,6 +170,11 @@ class Program
                                                      body: body);
 
                         Console.WriteLine($"Информация отправлена в non_critical_external_component_management_system");
+                        bodyOut = Encoding.UTF8.GetBytes($"Информация отправлена в non_critical_external_component_management_system");
+                        channel.BasicPublish(exchange: "",
+                                             routingKey: "test_out",
+                                             basicProperties: null,
+                                             body: bodyOut);
                         break;
                     case "non_critical_external_component_management_system":
                         channel.BasicPublish(exchange: "",
@@ -141,17 +183,42 @@ class Program
                                                      body: body);
 
                         Console.WriteLine($"Команда отправлена в non_critical_external_components");
+                        bodyOut = Encoding.UTF8.GetBytes($"Команда отправлена в non_critical_external_components");
+                        channel.BasicPublish(exchange: "",
+                                             routingKey: "test_out",
+                                             basicProperties: null,
+                                             body: bodyOut);
                         break;
                     case "authorization_system":
                         Console.WriteLine("Авторизация подтверждена");
+                        bodyOut = Encoding.UTF8.GetBytes("Авторизация подтверждена");
+                        channel.BasicPublish(exchange: "",
+                                             routingKey: "test_out",
+                                             basicProperties: null,
+                                             body: bodyOut);
+
                         channel.BasicPublish(exchange: "",
                                                      routingKey: "critical_input_command_processing_system",
                                                      basicProperties: null,
                                                      body: body);
                         if (input[1] != "script")
+                        {
                             Console.WriteLine($"Команда отправлена в critical_input_command_processing_system");
+                            bodyOut = Encoding.UTF8.GetBytes($"Команда отправлена в critical_input_command_processing_system");
+                            channel.BasicPublish(exchange: "",
+                                                 routingKey: "test_out",
+                                                 basicProperties: null,
+                                                 body: bodyOut);
+                        }
                         else
+                        {
                             Console.WriteLine($"Сценарий отправлен в critical_input_command_processing_system");
+                            bodyOut = Encoding.UTF8.GetBytes($"Сценарий отправлен в critical_input_command_processing_system");
+                            channel.BasicPublish(exchange: "",
+                                                 routingKey: "test_out",
+                                                 basicProperties: null,
+                                                 body: bodyOut);
+                        }
                         break;
                     case "critical_input_command_processing_system":
                         if (input[1] != "script" && input[1] != "start")
@@ -161,6 +228,11 @@ class Program
                                                          basicProperties: null,
                                                          body: body);
                             Console.WriteLine($"Команда отправлена в critical_external_component_management_system");
+                            bodyOut = Encoding.UTF8.GetBytes($"Команда отправлена в critical_external_component_management_system");
+                            channel.BasicPublish(exchange: "",
+                                                 routingKey: "test_out",
+                                                 basicProperties: null,
+                                                 body: bodyOut);
                         }
                         else
                         {
@@ -169,9 +241,23 @@ class Program
                                                          basicProperties: null,
                                                          body: body);
                             if (input[1] == "script")
+                            {
                                 Console.WriteLine($"Сценарий отправлен в system_for_reading_and_writing_user_scripts");
+                                bodyOut = Encoding.UTF8.GetBytes($"Сценарий отправлен в system_for_reading_and_writing_user_scripts");
+                                channel.BasicPublish(exchange: "",
+                                                     routingKey: "test_out",
+                                                     basicProperties: null,
+                                                     body: bodyOut);
+                            }
                             else
+                            {
                                 Console.WriteLine($"Команда отправлена в system_for_reading_and_writing_user_scripts");
+                                bodyOut = Encoding.UTF8.GetBytes($"Команда отправлена в system_for_reading_and_writing_user_scripts");
+                                channel.BasicPublish(exchange: "",
+                                                     routingKey: "test_out",
+                                                     basicProperties: null,
+                                                     body: bodyOut);
+                            }
                         }
                         break;
                     case "critical_external_component_management_system":
@@ -180,6 +266,11 @@ class Program
                                                          basicProperties: null,
                                                          body: body);
                         Console.WriteLine($"Команда отправлена в critical_external_components");
+                        bodyOut = Encoding.UTF8.GetBytes($"Команда отправлена в critical_external_components");
+                        channel.BasicPublish(exchange: "",
+                                             routingKey: "test_out",
+                                             basicProperties: null,
+                                             body: bodyOut);
                         break;
                     case "critical_data_analysis_system":
                         channel.BasicPublish(exchange: "",
@@ -187,6 +278,11 @@ class Program
                                                      basicProperties: null,
                                                      body: body);
                         Console.WriteLine($"Информация отправлена в critical_input_command_processing_system");
+                        bodyOut = Encoding.UTF8.GetBytes($"Информация отправлена в critical_input_command_processing_system");
+                        channel.BasicPublish(exchange: "",
+                                             routingKey: "test_out",
+                                             basicProperties: null,
+                                             body: bodyOut);
                         break;
                     case "system_for_reading_and_writing_user_scripts":
                         switch (input[1]) 
@@ -198,9 +294,24 @@ class Program
                                                      basicProperties: null,
                                                      body: body);
                                 if (input[1] == "script")
+                                {
                                     Console.WriteLine("Сценарий отправлен в сustom_script_library");
+                                    bodyOut = Encoding.UTF8.GetBytes("Сценарий отправлен в сustom_script_library");
+                                    channel.BasicPublish(exchange: "",
+                                                         routingKey: "test_out",
+                                                         basicProperties: null,
+                                                         body: bodyOut);
+                                }
                                 else
+                                {
                                     Console.WriteLine("Запрос на выполнение сценария отправен в сustom_script_library");
+                                    bodyOut = Encoding.UTF8.GetBytes("Запрос на выполнение сценария отправен в сustom_script_library");
+                                    channel.BasicPublish(exchange: "",
+                                                         routingKey: "test_out",
+                                                         basicProperties: null,
+                                                         body: bodyOut);
+
+                                }
                                 break;
                             default:
                                 channel.BasicPublish(exchange: "",
@@ -208,6 +319,11 @@ class Program
                                                      basicProperties: null,
                                                      body: body);
                                 Console.WriteLine("Команда отправлена в critical_external_component_management_system");
+                                bodyOut = Encoding.UTF8.GetBytes("Команда отправлена в critical_external_component_management_system");
+                                channel.BasicPublish(exchange: "",
+                                                     routingKey: "test_out",
+                                                     basicProperties: null,
+                                                     body: bodyOut);
                                 break;
                         }
                         break;
@@ -217,9 +333,19 @@ class Program
                                                      basicProperties: null,
                                                      body: body);
                         Console.WriteLine($"Команда отправлена в system_for_reading_and_writing_user_scripts");
+                        bodyOut = Encoding.UTF8.GetBytes($"Команда отправлена в system_for_reading_and_writing_user_scripts");
+                        channel.BasicPublish(exchange: "",
+                                             routingKey: "test_out",
+                                             basicProperties: null,
+                                             body: bodyOut);
                         break;
                     default:
                         Console.WriteLine("Отправитель не опознан");
+                        bodyOut = Encoding.UTF8.GetBytes("Отправитель не опознан");
+                        channel.BasicPublish(exchange: "",
+                                             routingKey: "test_out",
+                                             basicProperties: null,
+                                             body: bodyOut);
                         break;
                 }
             };

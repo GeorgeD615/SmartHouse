@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CriticalInputCommandProcess
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecurityMonitor", "SecurityMonitor\SecurityMonitor.csproj", "{6FAE3053-FD5E-4AE7-BA70-80F773096C45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomScriptLibrary", "CustomScriptLibrary\CustomScriptLibrary.csproj", "{3A56AABA-CDBB-40C2-921C-DF3460633A38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomScriptLibrary", "CustomScriptLibrary\CustomScriptLibrary.csproj", "{3A56AABA-CDBB-40C2-921C-DF3460633A38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{A4CBFC8D-070F-4E3A-9111-0269ACAC808D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{3A56AABA-CDBB-40C2-921C-DF3460633A38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A56AABA-CDBB-40C2-921C-DF3460633A38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A56AABA-CDBB-40C2-921C-DF3460633A38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4CBFC8D-070F-4E3A-9111-0269ACAC808D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4CBFC8D-070F-4E3A-9111-0269ACAC808D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4CBFC8D-070F-4E3A-9111-0269ACAC808D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4CBFC8D-070F-4E3A-9111-0269ACAC808D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

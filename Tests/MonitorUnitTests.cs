@@ -112,6 +112,51 @@ namespace Tests
         }
 
         [TestMethod]
+        public void UnknownSenderTest()
+        {
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                string input = string.Empty;
+                channel.QueueDeclare(queue: "test_out",
+                                        durable: false,
+                                        exclusive: false,
+                                        autoDelete: false,
+                                        arguments: null);
+
+                channel.QueueDeclare(queue: "security_monitor",
+                                        durable: false,
+                                        exclusive: false,
+                                        autoDelete: false,
+                                        arguments: null);
+
+                var commands_consumer = new EventingBasicConsumer(channel);
+                commands_consumer.Received += (model, ea) =>
+                {
+                    var body = ea.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                    input += message + "\n";
+                };
+                channel.BasicConsume(queue: "test_out",
+                                        autoAck: true,
+                                        consumer: commands_consumer);
+
+                Thread.Sleep(5000);
+                input = string.Empty;
+                var body = Encoding.UTF8.GetBytes($"unknown_sender some_command");
+                channel.BasicPublish(exchange: "",
+                                             routingKey: "security_monitor",
+                                             basicProperties: null,
+                                             body: body);
+
+                Thread.Sleep(20000);
+                Assert.AreEqual("Получил сообщение от unknown_sender\n" +
+                                "Отправитель не опознан\n", input);
+            }
+        }
+
+        [TestMethod]
         public void CriticalInformationTest()
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };

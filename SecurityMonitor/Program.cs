@@ -1,6 +1,5 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Security.Authentication.ExtendedProtection;
 using System.Text;
 
 class Program
